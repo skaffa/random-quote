@@ -1,10 +1,8 @@
-import pandas as pd
+import random
+from collections import defaultdict, OrderedDict
+from dataclasses import dataclass, field
 import msgpack
 import re
-import sys
-from collections import defaultdict
-import random
-from dataclasses import dataclass, field
 
 DELIMITER_END = '$'
 
@@ -12,7 +10,7 @@ def each_cons(xs, n):
     return [xs[i:i + n] for i in range(len(xs) - n + 1)]
 
 def normalize_hash(h):
-    weights = {}
+    weights = OrderedDict()
     total = sum(h.values())
     s = 0
     for c in sorted(h, key=h.get, reverse=True):
@@ -26,6 +24,7 @@ class MarkovWordGenerator:
     custom_words: list = field(default_factory=list)
     ignore_accents: bool = False
     mapping_chars: dict = field(default_factory=dict)
+    normalized_mapping_chars: dict = field(init=False, default_factory=dict)
 
     def __post_init__(self):
         if not self.mapping_chars:
@@ -34,14 +33,17 @@ class MarkovWordGenerator:
                 word = '^' + word.lower().replace('\n', DELIMITER_END).replace('.', '')
                 for combination in each_cons(word, self.markov_length + 1):
                     self.mapping_chars[combination] += 1
+        self.normalized_mapping_chars = {
+            prefix: normalize_hash({k: v for k, v in self.mapping_chars.items() if k.startswith(prefix)})
+            for prefix in {k[:self.markov_length] for k in self.mapping_chars}
+        }
 
     def select_next_chars(self, previous_chars):
         remainings = self.markov_length + 1 - len(previous_chars)
-        choices = {s: self.mapping_chars[s] for s in self.mapping_chars if s.startswith(previous_chars)}
-        wp = normalize_hash(choices)
+        choices = self.normalized_mapping_chars.get(previous_chars, {})
         u = random.uniform(0, 1)
-        for s in wp:
-            if wp[s] >= u:
+        for s in choices:
+            if choices[s] >= u:
                 return s[-remainings:]
         return DELIMITER_END
 
@@ -57,16 +59,6 @@ class MarkovWordGenerator:
         if word[-1] == DELIMITER_END:
             word = word[:-1]
         return word
-
-def process_csv(csv_file):
-    chunk_size = 100000
-    authors = set()  # Use a set to automatically remove duplicates
-
-    for chunk in pd.read_csv(csv_file, chunksize=chunk_size):
-        chunk['author'] = chunk['author'].astype(str).fillna('')
-        authors.update(chunk['author'].tolist())
-
-    return list(authors)
 
 def generate_word_model(words, markov_length, output_file):
     generator = MarkovWordGenerator(markov_length, custom_words=words)
@@ -96,19 +88,3 @@ def is_valid_author_name(name):
         if not (4 <= len(part) <= 9 and part[0].isupper()):
             return False
     return True
-
-def main():
-    csv_file = 'quotes.csv'
-    authors = process_csv(csv_file)
-    
-    # Generate Markov chain for authors after removing duplicates
-    generate_word_model(authors, 2, 'authors_markov_chain.msgpack')
-
-    author_model = load_markov_chain('authors_markov_chain.msgpack', 2)
-    random_author = generate_random_author(author_model)
-    
-    sys.stdout.reconfigure(encoding='utf-8')
-    print(f"Generated Author Name: {random_author}")
-
-if __name__ == '__main__':
-    main()

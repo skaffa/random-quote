@@ -4,9 +4,11 @@ pre-load next 10 images in local storage for fluent navigation
 capitalize each sentence
 
 
-
+make api endpoint where the user can read about how things are generated (including parts of code)
 
 
 
 
 just port the github script to accept a list of authors
+
+add watermark to right bottom corner

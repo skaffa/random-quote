@@ -30,10 +30,11 @@ def is_valid_author_name(name):
 def main():
     model_file = 'authors_markov_chain.msgpack'
     author_model = load_markov_chain(model_file)
-    random_author = generate_random_author(author_model)
-    
-    sys.stdout.reconfigure(encoding='utf-8')
-    print(f"Generated Author Name: {random_author}")
+    for _ in range(20):
+        random_author = generate_random_author(author_model)
+        
+        sys.stdout.reconfigure(encoding='utf-8')
+        print(f"Generated Author Name: {random_author}")
 
 if __name__ == '__main__':
     main()
