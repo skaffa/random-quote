@@ -24,7 +24,7 @@ def _create_gradient_image(width, height):
 
 # Define image dimensions
 def get_background():
-    width, height = 512, 512
+    width, height = 1024, 1024
     gradient_image = _create_gradient_image(width, height)
     path = f'temp/{time.time()}-{random.randint(1111, 9999)}.png'
     Image.fromarray(gradient_image).save(path)

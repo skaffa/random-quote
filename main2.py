@@ -20,7 +20,7 @@ app = Flask(__name__)
 def index():
     background = bg.get_background() # path to background image (gradient)
     # get random quote
-    quote = qt.get_quote()
+    quote = qt.get_quote(background) # path to bg + quote
     # get random author-
     # author = author_generator.get_author()
     # combine quote and gradient
@@ -28,7 +28,7 @@ def index():
     # save image
     # return image
 
-    return send_file(background, mimetype='image/png')
+    return send_file(quote, mimetype='image/png')
 
 
 

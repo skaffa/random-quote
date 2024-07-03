@@ -15,47 +15,37 @@ model = markovify.Text(' '.join(quotes), state_size=2)
 def _get_quote():
     return model.make_sentence()
 
-import textwrap
-
-def _put_quote_in_image(quote):
-    width, height = 1080, 1080
-    image = Image.new("RGB", (width, height))
-    draw = ImageDraw.Draw(image)
-    font_path = os.path.join(os.getcwd(), "raleway.ttf")
-    font = ImageFont.truetype(font_path, 48)
-    
-    # Wrap the quote text into multiple lines
-    wrapped_text = textwrap.wrap(quote, width=32, initial_indent='', subsequent_indent='', expand_tabs=True)
-    
-    # Calculate the total height of the wrapped text
-    total_height = 0
-    for line in wrapped_text:
-        text_width, text_height = draw.textbbox((0, 0), line, font=font)[2:]
-        total_height += text_height
-    
-    y = (height - total_height) / 2
-
-    for line in wrapped_text:
-        text_width, text_height = draw.textbbox((0, 0), line, font=font)[2:]
-        x = (width - text_width) / 2
-        draw.text((x, y), line, font=font, fill="white")
-        y += text_height
-    
-    return image
-
 def _save_image(image):
     file_path = f'temp/{time.time()}-{random.randint(1111, 9999)}.png'
     image.save(file_path)
     return file_path
 
-def get_quote():
+def _put_quote_on_background(quote, background_path):
+    image = Image.open(background_path)
+    draw = ImageDraw.Draw(image)
+    font_path = os.path.join(os.getcwd(), "raleway.ttf")
+    font = ImageFont.truetype(font_path, 48)
+    wrapped_text = textwrap.wrap(quote, width=32, initial_indent='', subsequent_indent='', expand_tabs=True)
+    total_height = 0
+    for line in wrapped_text:
+        text_width, text_height = draw.textbbox((0, 0), line, font=font)[2:]
+        total_height += text_height
+    y = (image.height - total_height) / 2
+    for line in wrapped_text:
+        text_width, text_height = draw.textbbox((0, 0), line, font=font)[2:]
+        x = (image.width - text_width) / 2
+        draw.text((x, y), line, font=font, fill="white")
+        y += text_height
+    return image
+
+def get_quote(background_path):
     quote = _get_quote()
-    image = _put_quote_in_image(quote)
-    path = _save_image(image)
-    return path
+    image = _put_quote_on_background(quote, background_path)
+    temp_path = _save_image(image)
+    return temp_path
 
 
 if __name__ == '__main__':
-    img = get_quote()
+    img = get_quote('temp/11595725.png')
     Image.open(img).show()
 
