@@ -1,37 +1,40 @@
-# TODO: (workflow)
-
-from flask import Flask, send_file, jsonify
-
+from flask import Flask, send_file, jsonify, render_template, request, redirect
 import get_background as bg
 import get_quote as qt
-# import serialize_quotes
-# from get_author import AuthorGenerator
-
-# author_generator = AuthorGenerator('authors_markov_chain.msgpack', 2)
-
-
-
-# pre-load data
-
+import get_author as at
+import get_watermark as wm
+from glob import glob
+from random import choice
 
 app = Flask(__name__)
 
+files = glob('static/images/*.webp')
+
+# task to generate, delete, and move quotes
+
+# functio to get random quote
+
+@app.route('/get-quote')
+def return_url():
+    background = bg.get_background()
+    quote = qt.get_quote(background)
+    author = at.get_author(quote)
+    url = request.url
+    watermark = wm.get_watermark(author, url)
+
+    return watermark
+
+@app.route('/get-random-quote')
+def show_the_quotes():
+    return send_file(choice(files))
+
+@app.route('/show-the-quotes')
+def show_the_quotes():
+    return render_template('show_the_quotes.html')
+
 @app.route('/')
-def index():
-    background = bg.get_background() # path to background image (gradient)
-    # get random quote
-    quote = qt.get_quote(background) # path to bg + quote
-    # get random author-
-    # author = author_generator.get_author()
-    # combine quote and gradient
-    # add author
-    # save image
-    # return image
-
-    return send_file(quote, mimetype='image/png')
-
-
-
+def home():
+    return redirect("/show-the-quotes", code=302)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8000)

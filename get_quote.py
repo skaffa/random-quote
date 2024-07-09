@@ -1,5 +1,4 @@
 import os
-import msgpack
 import pandas as pd
 import markovify
 from PIL import Image, ImageDraw, ImageFont
@@ -10,10 +9,15 @@ import time
 csv_file = 'quotes.csv'
 quotes_df = pd.read_csv(csv_file)
 quotes = [str(quote) for quote in quotes_df['quote'].tolist()]
-model = markovify.Text(' '.join(quotes), state_size=2)
+# specify max sentence length
+model = markovify.Text(' '.join(quotes), state_size=3)
 
 def _get_quote():
-    return model.make_sentence()
+    while True:
+        quote = model.make_short_sentence(96)
+        if quote:
+            quote = f'“{quote}”'
+            return quote
 
 def _save_image(image):
     file_path = f'temp/{time.time()}-{random.randint(1111, 9999)}.png'
@@ -34,7 +38,7 @@ def _put_quote_on_background(quote, background_path):
     for line in wrapped_text:
         text_width, text_height = draw.textbbox((0, 0), line, font=font)[2:]
         x = (image.width - text_width) / 2
-        draw.text((x, y), line, font=font, fill="white")
+        draw.text((x, y), line, font=font, fill="#454545")
         y += text_height
     return image
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #444444;
+        }
+
+        #container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1em;
+            width: 512px;
+            margin: 0 auto;
+        }
+
+        #quote {
+            width: 512px;
+            border-radius: 1em;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: .25em;
+        }
+
+        #buttons button {
+            padding: .2em;
+            border-radius: .25em;
+            width: 7em;
+            border-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <img id="quote" src="">
+        <div id="buttons">
+            <button class="prev-quote" onclick="display_image(-1)">Previous</button>
+            <button id="share-quote" onclick="share_quote()">Share</button>
+            <button id="new-quote" onclick="new_quote()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let images = [];
+        let imagesIndex = -1;
+
+        function setBuffer(count) {
+            for (let i = 0; i < count; i++) {
+                fetch_quote();
+            }
+        }
+
+        function display_image(value) {
+            imagesIndex += value;
+
+            if (imagesIndex < 0) {
+                imagesIndex = 0;
+            }
+
+            if (imagesIndex >= images.length) {
+                imagesIndex = images.length - 1;
+            }
+
+            if (imagesIndex >= 0 && imagesIndex < images.length) {
+                let image = images[imagesIndex];
+                let full_path = `/show-quote/${image}`;
+                document.getElementById('quote').src = full_path;
+                console.log("Displaying image:", full_path);
+            } else {
+                console.log("No valid image to display");
+            }
+        }
+
+        function fetch_quote() {
+            fetch('/get-quote')
+                .then(response => response.text())
+                .then(uid => {
+                    console.log("Fetched uid:", uid);
+                    if (uid) {
+                        images.push(uid);
+                        if (imagesIndex === -1) {
+                            imagesIndex = 0;
+                            display_image(0);
+                        }
+                    } else {
+                        console.error("No uid in response data");
+                    }
+                })
+                .catch(error => console.error('Error fetching new quote:', error));
+        }
+
+        function new_quote() {
+            fetch_quote();
+            imagesIndex = images.length - 1;
+            display_image(0);
+        }
+
+        function share_quote() {
+            // navigator.share({url: location.href});
+        }
+
+        setBuffer(10);
+    </script>
+</body>
+</html>

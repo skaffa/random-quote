@@ -1,14 +1,26 @@
 make index have infinite scroll-through the images
 pre-load next 10 images in local storage for fluent navigation
 
-capitalize each sentence
-
 
 make api endpoint where the user can read about how things are generated (including parts of code)
 
 
 
+allow users to vote for quotes
 
-just port the github script to accept a list of authors
 
-add watermark to right bottom corner
+
+add loader to the page because images need to buffer (Buffering...)
+
+
+use arrows keys to scroll through images
+use enter key to go to next image
+use backspace key to go to previous image
+use space key to save/share image (raw image, not a url to it)
+
+soft-code a limit on previous/back clicks to once per 500ms
+
+disable 'Next' button and show spinner when the buffer is empty or loading
+
+
+put quote in head meta tag
