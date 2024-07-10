@@ -7,7 +7,7 @@ def calculate_statistics():
     
     for directory_path in directory_paths:
         directory = Path(directory_path)
-        files = list(directory.glob(extension))
+        files = list(directory.glob('*.webp'))
 
         if files:
             total_size = sum(file.stat().st_size for file in files)
@@ -81,7 +81,7 @@ def generate_html_file():
     for stats in statistics:
         html_content += f'''
         <div class="stats-container">
-            <h2>Statistics for .webp files in directory {stats["directory"]}:</h2>
+            <h2>`{stats["directory"]}`</h2>
             <p class="stat">Total files: {stats["total_files"]}</p>
             <p class="stat">Total size: {stats["total_size"]}</p>
             {f'<p class="stat">Average size: {stats["average_size"]}</p>' if 'average_size' in stats else ''}
