@@ -1,32 +1,23 @@
 from flask import Flask, send_file, jsonify, render_template, request, redirect
-import get_background as bg
-import get_quote as qt
-import get_author as at
-import get_watermark as wm
 from glob import glob
 from random import choice
+import asyncio
+import threading
+import background_seeder as seeder
 
 app = Flask(__name__)
 
-files = glob('static/images/*.webp')
-
-# task to generate, delete, and move quotes
-
-# functio to get random quote
-
-@app.route('/get-quote')
-def return_url():
-    background = bg.get_background()
-    quote = qt.get_quote(background)
-    author = at.get_author(quote)
-    url = request.url
-    watermark = wm.get_watermark(author, url)
-
-    return watermark
-
 @app.route('/get-random-quote')
-def show_the_quotes():
+def get_random_quote():
+    fid = request.args.get('image')
+    if fid:
+        return send_file(f'static/images/{fid}.webp')
+    files = glob('static/images/*.webp')
     return send_file(choice(files))
+
+@app.route('/vote-a-quote')
+def vote_a_quote():
+    return render_template('vote_a_quote.html')
 
 @app.route('/show-the-quotes')
 def show_the_quotes():
@@ -36,5 +27,11 @@ def show_the_quotes():
 def home():
     return redirect("/show-the-quotes", code=302)
 
+def run_seeder():
+    asyncio.run(seeder.seeder())
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    seeder_thread = threading.Thread(target=run_seeder)
+    seeder_thread.start()
+    
+    app.run(debug=True, host='0.0.0.0', port=8000, use_reloader=False)

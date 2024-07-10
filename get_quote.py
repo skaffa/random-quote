@@ -47,9 +47,3 @@ def get_quote(background_path):
     image = _put_quote_on_background(quote, background_path)
     temp_path = _save_image(image)
     return temp_path
-
-
-if __name__ == '__main__':
-    img = get_quote('temp/11595725.png')
-    Image.open(img).show()
-
