@@ -22,8 +22,8 @@ Compress(app)
 
 @app.route('/get-random-quote')
 def get_random_quote():
-    files = glob('static/images/*.webp')
-    return send_file(choice(files))
+    cached_quotes = glob('static/images/*')
+    return send_file(choice(cached_quotes))
 
 @app.route('/vote-a-quote')
 def vote_a_quote():
@@ -40,6 +40,11 @@ def home():
 @app.route('/robots.txt')
 def robots():
     return send_file('static/robots.txt')
+
+@app.after_request
+def after_request(res):
+    pass
+    return res
 
 def run_seeder():
     asyncio.run(seeder.seeder())

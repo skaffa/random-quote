@@ -127,12 +127,22 @@ function go_home() {
 function share_quote() {
 
     // share raw image + text
-    navigator.share({
-        files: [new File([document.getElementById('quote').src], "image.png", {type: "image/png"})],
-        text: document.getElementById('quote').src
-    });
+    // navigator.share({
+    //     files: [new File([document.getElementById('quote').src], "image.png", {type: "image/png"})],
+    //     text: document.getElementById('quote').src
+    // });
 }
 
+let lastClick = 0;
+document.onkeydown = function(e) {
+    if (e.keyCode == 32) {
+        if (Date.now() - lastClick < 2000) {
+            return;
+        }
+        lastClick = Date.now();
+        generate_quote();
+    }
+}
 
 </script>
 
