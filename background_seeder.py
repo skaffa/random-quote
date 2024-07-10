@@ -24,7 +24,7 @@ async def seeder():
             os.rename(webp, f'static/images/{time.time()}-{random.randint(1111, 9999)}.webp')
 
             iters += 1
-            if iters >= 7000:
+            if iters >= 2500:
                 for histor in history:
                     new_path = os.path.join('all_quote_images', os.path.basename(histor))
                     os.rename(histor, new_path)

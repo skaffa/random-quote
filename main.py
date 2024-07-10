@@ -13,6 +13,12 @@ Minify(app, go=False, passive=True)
 CORS(app)
 Compress(app)
 
+######
+# @app.route('/gyallery-like-riri')
+# def return_batch():
+#     files = glob('static/images/*.webp')
+#     return jsonify(files)
+######
 
 @app.route('/get-random-quote')
 def get_random_quote():
