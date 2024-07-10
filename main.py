@@ -7,6 +7,7 @@ from random import choice
 import asyncio
 import threading
 import background_seeder as seeder
+import show_stats as stats
 
 app = Flask(__name__)
 Minify(app, go=False, passive=True)
@@ -40,6 +41,10 @@ def home():
 @app.route('/robots.txt')
 def robots():
     return send_file('static/robots.txt')
+
+@app.route('/stats')
+def stats_page():
+    return stats.generate_html_file()
 
 @app.after_request
 def after_request(res):

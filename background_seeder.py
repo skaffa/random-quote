@@ -11,15 +11,9 @@ from glob import glob
 import hashlib
 
 async def seeder():
-    for f in glob('temp/*'):
-        os.remove(f)
-    for f in glob('static/images/*'):
-        os.remove(f)
-
     while True:
         print("Seeding...")
-        iters = 0
-        history = glob('static/images/*.webp')
+        history = glob('static\\images\\*.webp')
         
         for i in range(750):
             background = bg.get_background()
@@ -28,15 +22,17 @@ async def seeder():
             watermark = wm.get_watermark(author, url='http://beanium.net:8000')
             webp = wp.get_webp(watermark)
             name = hashlib.sha1(quote.encode()).hexdigest()
-            os.rename(webp, f'static/images/{name}.webp')
+            os.rename(webp, f'static\\images\\{name}.webp')
 
+        if history:
             for histor in history:
                 new_path = os.path.join('all_quote_images', os.path.basename(histor))
                 os.rename(histor, new_path)
 
-                for f in glob('temp/*'):
-                    os.remove(f)
-                break
+        t = glob('temp\\*')
+        if t:
+            for f in t:
+                os.remove(f)
 
         print("Seeded!")
         print('Waiting 30 minutes...')

@@ -3,3 +3,4 @@ temp/*
 static/images/*
 TODO
 __pycache__
+all_quote_images/*
