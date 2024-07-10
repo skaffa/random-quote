@@ -15,7 +15,6 @@ Compress(app)
 
 
 @app.route('/get-random-quote')
-@
 def get_random_quote():
     files = glob('static/images/*.webp')
     return send_file(choice(files))
