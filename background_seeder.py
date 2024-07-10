@@ -13,7 +13,7 @@ async def seeder():
     while True:
         print("Seeding...")
         iters = 0
-        history = glob.glob('static/images/*.webp')
+        history = glob('static/images/*.webp')
         
         while True:
             background = bg.get_background()

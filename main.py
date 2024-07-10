@@ -37,6 +37,10 @@ def show_the_quotes():
 def home():
     return redirect("/show-the-quotes", code=302)
 
+@app.route('/robots.txt')
+def robots():
+    return send_file('static/robots.txt')
+
 def run_seeder():
     asyncio.run(seeder.seeder())
 
