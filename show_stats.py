@@ -43,7 +43,7 @@ def calculate_statistics():
     return all_statistics
 
 def generate_html_file():
-    statistics = calculate_statistics(directory_paths)
+    statistics = calculate_statistics()
 
     html_content = '''
     <html>
