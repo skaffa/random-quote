@@ -1,4 +1,7 @@
 from flask import Flask, send_file, jsonify, render_template, request, redirect
+from flask_cors import CORS
+from flask_minify import Minify, decorators as minify_decorators
+from flask_compress import Compress
 from glob import glob
 from random import choice
 import asyncio
@@ -6,12 +9,14 @@ import threading
 import background_seeder as seeder
 
 app = Flask(__name__)
+Minify(app, go=False, passive=True)
+CORS(app)
+Compress(app)
+
 
 @app.route('/get-random-quote')
+@
 def get_random_quote():
-    fid = request.args.get('image')
-    if fid:
-        return send_file(f'static/images/{fid}.webp')
     files = glob('static/images/*.webp')
     return send_file(choice(files))
 

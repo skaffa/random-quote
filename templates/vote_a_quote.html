@@ -78,7 +78,8 @@
         }
 
         #buttons button:nth-of-type(2),
-        #buttons button:nth-of-type(3) {
+        #buttons button:nth-of-type(3),
+        #buttons button {
             font-size: 1em;
             cursor: pointer;
             font-family: "Montserrat", sans-serif;
@@ -101,10 +102,11 @@
         <div id="img_wrapper">
             <img id="quote" src="/get-random-quote", alt="Loading...">
             <div id="buttons">
-                <button id="previous-quote" class="prev-quote" onclick="previous_quote()"><</button>
+                <!-- <button id="previous-quote" class="prev-quote" onclick="previous_quote()"><</button> -->
                 <button id="go-home" onclick="go_home()">Home</button>
                 <button id="share-quote" onclick="share_quote()">Share</button>
-                <button id="new-quote" onclick="next_quote()">></button>
+                <button id="generate-quote" onclick="generate_quote()">Generate</button>
+                <!-- <button id="new-quote" onclick="next_quote()">></button> -->
             </div>
         </div>
     </div>
@@ -112,16 +114,10 @@
 </html>
 
 <script>
-    let quotes = [];
-    let qIndex = 0;
 
-function next_quote() {
-    ran = Math.floor(Math.random() * 10);
-    document.getElementById('quote').src = `/get-random-quote?qIndex=${ran}`;
-}
-
-function previous_quote() {
-
+function generate_quote() {
+    let randint = Math.floor(Math.random() * 100000) + 1;
+    document.getElementById('quote').src = `/get-random-quote?randint=${randint}`;
 }
 
 function go_home() {
@@ -129,7 +125,12 @@ function go_home() {
 }
 
 function share_quote() {
-    // navigator.share({url: location.href});
+
+    // share raw image + text
+    navigator.share({
+        files: [new File([document.getElementById('quote').src], "image.png", {type: "image/png"})],
+        text: document.getElementById('quote').src
+    });
 }
 
 
