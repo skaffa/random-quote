@@ -49,6 +49,10 @@ def show_the_quotes():
 def robots():
     return send_file('static/robots.txt')
 
+@app.route('/ads.txt')
+def ads_txt():
+    return render_template('static/ads.txt')
+
 @app.route('/sitemap')
 @app.route('/sitemap.xml')
 def sitemap():
