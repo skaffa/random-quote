@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show the Quotes</title>
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7642883175137877" crossorigin="anonymous"></script> -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: #111827  ;
+        }
+
+        #quote-images-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow-y: scroll;
+            /* scrollbar-width: none; */
+        }
+
+        img {
+            margin-top: 35vh;
+            margin-bottom: 5vh;
+            width: 512px;
+            max-width: 100vw;
+            border-radius: 1em;
+        }
+
+        aside {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: .25em;
+            height: 100vh;
+            width: fit-content;
+            padding: .4em;
+        }
+
+        .aelement {
+            width: 6em;
+            min-width: fit-content;
+            background: #323232;
+            color: whitesmoke;
+            padding: .25em;
+            border-radius: 3px;
+            font-size: 1.2em;
+            user-select: none;
+            text-decoration: none;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            transition: .1s ease-in-out;
+            text-transform: capitalize;
+            width: 100%;
+            min-width: fit-content; 
+        }
+
+        .aelement:hover {
+            opacity: .85;
+        }
+
+        #vote {
+            cursor: pointer;
+        }
+
+        #auto-scroll-toggle {
+            cursor: default;
+        }
+
+        #legal {
+            margin-top: auto;
+            cursor: pointer;
+            background: #696969;
+            font-size: .75em;
+        }
+
+        /* add boxshadow to img and buttons */
+        /* give buttons a more fitting color (if i keep this background) */
+    </style>
+</head>
+<body>
+    <aside>
+        <a class="aelement" id="vote" href="/vote-a-quote">Vote ➜</a>
+        <div class="aelement" id="auto-scroll-toggle">Enable Auto-Scroll</div>
+        <a class="aelement" target="_blank" id="legal" href="/legal">Legal</a>
+    </aside>
+
+    <div id="quote-images-container">
+        <img src="/random-quote-image?no_cache=2897213" alt="">
+        <img src="/random-quote-image?no_cache=3958342" alt="">
+        <img src="/random-quote-image?no_cache=9873334" alt="">
+        
+    </div>
+
+    <script>
+        let autoScrollEnabled = false;
+
+        const container = document.getElementById('quote-images-container');
+        container.addEventListener('scroll', function() {
+            const scrollPercentage = (container.scrollTop / (container.scrollHeight - container.offsetHeight)) * 100;
+            if (scrollPercentage >= 80) {
+                for (let i = 0; i < 3; i++) {
+                    const img = document.createElement('img');
+                    img.src = 'http://beanium.net:8000/get-random-quote';
+                    img.alt = '';
+                    container.appendChild(img);
+                }
+            }
+        });
+
+
+let scrollInterval = null;
+
+document.getElementById('auto-scroll-toggle').onclick = () => {
+  autoScrollEnabled = !autoScrollEnabled;
+  document.getElementById('auto-scroll-toggle').innerText = autoScrollEnabled ? 'Disable Auto-Scroll' : 'Enable Auto-Scroll';
+
+  if (autoScrollEnabled) {
+    scrollInterval = setInterval(() => {
+      const container = document.getElementById('quote-images-container');
+      container.scrollTop = container.scrollTop + 1
+    }, 25);
+  } else {
+    clearInterval(scrollInterval);
+  }
+};
+    </script>
+</body>
+</html>
+
+
+<!-- give each img an id and press space to snap to next image -->

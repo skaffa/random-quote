@@ -1,55 +1,68 @@
 from flask import Flask, send_file, jsonify, render_template, request, redirect
+from flask_limiter import Limiter
+from flask_caching import Cache
+import utilset as uls
 from flask_cors import CORS
 from flask_minify import Minify, decorators as minify_decorators
+from flask_limiter.util import get_remote_address, request 
 from flask_compress import Compress
-from glob import glob
+from flask_talisman import Talisman
+import get_database as qdb
 from random import choice
 import asyncio
 import threading
 import background_seeder as seeder
-import show_stats as stats
+import random
 
 app = Flask(__name__)
-Minify(app, go=False, passive=True)
+# Minify(app, go=False, passive=True)
 CORS(app)
-Compress(app)
+# Compress(app)
+# Talisman(app)
+cache = Cache(app=app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': 'tmp/flaskcache'})
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["7 per second"],
+    storage_uri="memory://",
+    strategy="moving-window",
+)
 
-######
-# @app.route('/gyallery-like-riri')
-# def return_batch():
-#     files = glob('static/images/*.webp')
-#     return jsonify(files)
-######
+@cache.memoize(timeout=uls.get_seconds(minutes=5))
+def list_cached_quotes():
+    return qdb.fetch_multiple_quotes(count=1000)
 
-@app.route('/get-random-quote')
-def get_random_quote():
-    cached_quotes = glob('static/images/*')
-    return send_file(choice(cached_quotes))
+@app.route('/random-quote-image')
+def random_quote_image():
+    return send_file(f"all_quote_images/{random.choice(list_cached_quotes()).uid}.webp")
 
 @app.route('/vote-a-quote')
+@app.route('/vote')
 def vote_a_quote():
-    return render_template('vote_a_quote.html')
+    return render_template('vote-a-quote.html')
 
 @app.route('/show-the-quotes')
 def show_the_quotes():
-    return render_template('show_the_quotes.html')
-
-@app.route('/')
-def home():
-    return redirect("/show-the-quotes", code=302)
+    return render_template('show-the-quotes.html')
 
 @app.route('/robots.txt')
 def robots():
     return send_file('static/robots.txt')
 
-@app.route('/stats')
-def stats_page():
-    return stats.generate_html_file()
+@app.route('/sitemap')
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_file('static/sitemap.xml')
 
-@app.after_request
-def after_request(res):
-    pass
-    return res
+@app.route('/legal')
+def legal(e=None):
+    return redirect('https://github.com/skaffa/random-quote')
+
+@app.route('/')
+@app.errorhandler(404)
+def home(e=None):
+    print("Index it is")
+    return redirect("/show-the-quotes", code=302)
 
 def run_seeder():
     asyncio.run(seeder.seeder())
@@ -58,4 +71,4 @@ if __name__ == '__main__':
     seeder_thread = threading.Thread(target=run_seeder)
     seeder_thread.start()
     
-    app.run(debug=True, host='0.0.0.0', port=8000, use_reloader=False)
+    app.run(debug=True, host='0.0.0.0', port=80, use_reloader=False)

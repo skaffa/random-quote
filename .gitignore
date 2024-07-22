@@ -2,5 +2,6 @@ quotes.csv
 temp/*
 static/images/*
 TODO
-__pycache__
+__pycache__/*
 all_quote_images/*
+tmp/*

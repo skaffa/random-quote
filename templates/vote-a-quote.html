@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vote A Quote</title>
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7642883175137877" crossorigin="anonymous"></script> -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
@@ -59,12 +60,14 @@
             background: #00000000;
             backdrop-filter: blur(5px);
             height: 3em;
+            gap: 1em;
         }
 
         #buttons button {
             border-radius: .5em;
             border-style: none;
-            width: 5em;
+            /* width: 5em; */
+            width: 100%;
             height: 75%;
             font-family: fetish;
             font-size: 1.2em;
@@ -100,7 +103,7 @@
 <body>
     <div id="container">
         <div id="img_wrapper">
-            <img id="quote" src="/get-random-quote", alt="Loading...">
+            <img id="quote" src="/random-quote-image" alt="Loading...">
             <div id="buttons">
                 <!-- <button id="previous-quote" class="prev-quote" onclick="previous_quote()"><</button> -->
                 <button id="go-home" onclick="go_home()">Home</button>
@@ -117,7 +120,7 @@
 
 function generate_quote() {
     let randint = Math.floor(Math.random() * 100000) + 1;
-    document.getElementById('quote').src = `/get-random-quote?randint=${randint}`;
+    document.getElementById('quote').src = `/random-quote-image?randint=${randint}`;
 }
 
 function go_home() {
@@ -125,12 +128,6 @@ function go_home() {
 }
 
 function share_quote() {
-
-    // share raw image + text
-    // navigator.share({
-    //     files: [new File([document.getElementById('quote').src], "image.png", {type: "image/png"})],
-    //     text: document.getElementById('quote').src
-    // });
 }
 
 let lastClick = 0;
@@ -147,3 +144,7 @@ document.onkeydown = function(e) {
 </script>
 
 
+
+<!-- 1 second delay per click -->
+<!-- make buttons animate to make users click it (attractive) -->
+ <!-- different colors per button -->

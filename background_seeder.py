@@ -3,6 +3,7 @@ import get_quote as qt
 import get_author as at
 import get_watermark as wm
 import get_webp as wp
+import get_database as db
 import asyncio
 import os
 import time
@@ -13,26 +14,27 @@ import hashlib
 async def seeder():
     while True:
         print("Seeding...")
-        history = glob('static\\images\\*.webp')
         
-        for i in range(750):
+        for i in range(25):
             background = bg.get_background()
             quote = qt.get_quote(background)
             author = at.get_author(quote)
             watermark = wm.get_watermark(author, url='http://beanium.net:8000')
             webp = wp.get_webp(watermark)
             name = hashlib.sha1(quote.encode()).hexdigest()
-            os.rename(webp, f'static\\images\\{name}.webp')
+            os.rename(webp, f'all_quote_images/{name}.webp')
+            db.add_quote(name, quote, author)
+            print(i)
 
-        if history:
-            for histor in history:
-                new_path = os.path.join('all_quote_images', os.path.basename(histor))
-                os.rename(histor, new_path)
 
-        t = glob('temp\\*')
+        t = glob('temp/*')
         if t:
             for f in t:
-                os.remove(f)
+                try:
+                    os.remove(f)
+                except FileNotFoundError as e:
+                    continue
+
 
         print("Seeded!")
         print('Waiting 30 minutes...')
