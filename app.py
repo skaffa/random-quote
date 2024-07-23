@@ -4,15 +4,17 @@ from flask_caching import Cache
 import utilset as uls
 from flask_cors import CORS
 from flask_minify import Minify, decorators as minify_decorators
-from flask_limiter.util import get_remote_address, request 
+from flask_limiter.util import get_remote_address
 from flask_compress import Compress
 from flask_talisman import Talisman
 import get_database as qdb
-from random import choice
+import routing as rt
 import asyncio
 import threading
 import background_seeder as seeder
 import random
+from waitress import serve
+import ssl
 
 app = Flask(__name__)
 # Minify(app, go=False, passive=True)
@@ -31,6 +33,8 @@ limiter = Limiter(
 @cache.memoize(timeout=uls.get_seconds(minutes=5))
 def list_cached_quotes():
     return qdb.fetch_multiple_quotes(count=1000)
+
+rt.domain_based_routing(app)
 
 @app.route('/random-quote-image')
 def random_quote_image():
@@ -75,4 +79,9 @@ if __name__ == '__main__':
     seeder_thread = threading.Thread(target=run_seeder)
     seeder_thread.start()
     
-    app.run(debug=True, host='0.0.0.0', port=80, use_reloader=False)
+    # ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    # ssl_context.load_cert_chain(certfile='path/to/your/certfile.pem', keyfile='path/to/your/keyfile.pem')
+
+
+    # certifytheweb is used for LetsEncrypt certificates
+    serve(app, host='0.0.0.0', port=443, ssl_context='adhoc') #, ssl_context=ssl_context
