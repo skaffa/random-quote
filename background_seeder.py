@@ -15,7 +15,7 @@ async def seeder():
     while True:
         print("Seeding...")
         
-        for i in range(25):
+        for i in range(20):
             background = bg.get_background()
             quote = qt.get_quote(background)
             author = at.get_author(quote)
