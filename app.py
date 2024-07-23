@@ -49,6 +49,7 @@ def vote_a_quote():
 def show_the_quotes():
     return render_template('show-the-quotes.html')
 
+<<<<<<< Updated upstream:app.py
 @app.route('/robots.txt')
 def robots():
     return send_file('static/robots.txt')
@@ -57,14 +58,20 @@ def robots():
 def ads_txt():
     return render_template('static/ads.txt')
 
+=======
+>>>>>>> Stashed changes:main.py
 @app.route('/sitemap')
 @app.route('/sitemap.xml')
 def sitemap():
     return send_file('static/sitemap.xml')
 
 @app.route('/legal')
-def legal(e=None):
+def legal():
     return redirect('https://github.com/skaffa/random-quote')
+
+@app.route('/robots.txt')
+def robots():
+    return send_file('static/robots.txt')
 
 @app.route('/')
 @app.errorhandler(404)

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Show the Quotes</title>
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7642883175137877" crossorigin="anonymous"></script> -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7642883175137877" crossorigin="anonymous"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
@@ -102,18 +102,26 @@
     <aside>
         <a class="aelement" id="vote" href="/vote-a-quote">Vote ➜</a>
         <div class="aelement" id="auto-scroll-toggle">Enable Auto-Scroll</div>
+<<<<<<< Updated upstream
         <div class="separ"></div>
         <a class="aelement" target="_blank" id="legal" href="/legal">Legal, source, about</a>
+=======
+        <a class="aelement" target="_blank" id="legal" href="/legal">Legal, About & Contact</a>
+>>>>>>> Stashed changes
     </aside>
 
     <div id="quote-images-container">
-        <img src="/random-quote-image?no_cache=2897213" alt="">
-        <img src="/random-quote-image?no_cache=3958342" alt="">
-        <img src="/random-quote-image?no_cache=9873334" alt="">
+        <img src="/random-quote-image?no_cache=2897663745213" alt="">
+        <img src="/random-quote-image?no_cache=3956575638342" alt="">
+        <img src="/random-quote-image?no_cache=9756733873334" alt="">
         
     </div>
 
     <script>
+        function random_int() {
+            return Math.floor(Math.random() * 100000000) + 1;
+        }
+
         let autoScrollEnabled = false;
 
         const container = document.getElementById('quote-images-container');
@@ -122,7 +130,7 @@
             if (scrollPercentage >= 80) {
                 for (let i = 0; i < 3; i++) {
                     const img = document.createElement('img');
-                    img.src = 'http://beanium.net:8000/get-random-quote';
+                    img.src = `http://beanium.net:8000/random-quote-image?no_cache=${random_int()}`;
                     img.alt = '';
                     container.appendChild(img);
                 }
@@ -151,3 +159,4 @@ document.getElementById('auto-scroll-toggle').onclick = () => {
 
 
 <!-- give each img an id and press space to snap to next image -->
+<!-- fix scroll rebounce -->
