@@ -14,7 +14,6 @@ import threading
 import background_seeder as seeder
 import random
 from waitress import serve
-import ssl
 
 app = Flask(__name__)
 # Minify(app, go=False, passive=True)
@@ -85,10 +84,5 @@ def run_seeder():
 if __name__ == '__main__':
     seeder_thread = threading.Thread(target=run_seeder)
     seeder_thread.start()
-    
-    # ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-    # ssl_context.load_cert_chain(certfile='path/to/your/certfile.pem', keyfile='path/to/your/keyfile.pem')
 
-
-    # certifytheweb is used for LetsEncrypt certificates
-    serve(app, host='0.0.0.0', port=443, ssl_context='adhoc') #, ssl_context=ssl_context
+    serve(app, host='0.0.0.0', port=443)
