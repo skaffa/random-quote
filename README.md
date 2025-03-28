@@ -1,3 +1,6 @@
+# THIS PROJECT IS A WORK IN PROGRESS
+
+
 ### [What](#what)
 A web server, created using [Flask](https://en.wikipedia.org/wiki/Flask_(web_framework)), serves as a [content farm](https://en.wikipedia.org/wiki/Content_farm). It automatically generates random quotes and presents them to the user in a [doom-scroll](https://en.wikipedia.org/wiki/Doomscrolling) environment, aiming to generate ad revenue.
 
